@@ -1,0 +1,16 @@
+# Use the rrc2021 image as base
+Bootstrap: library
+From: felix.widmaier/rrc/rrc2021:latest
+
+# alternatively to the above, you can specify the path to a local image:
+# Bootstrap: localimage
+# From: ./rrc2021.sif
+
+%post
+    # Put commands to install additional dependencies here.
+    # Make sure everything runs automatically without human input (e.g. add
+    # `-y` to automatically say "yes" below).
+    # apt-get install -y package_name
+    
+    pip3 install torch torchvision torchaudio
+    pip install mpi4py
