@@ -145,7 +145,7 @@ class ddpg_agent_rrc:
                 
                 
     def save_model(self, epoch):
-        if MPI.COMM_WORLD.Get_rank() == 0:
+        if epoch % self.args.save_interval == 0 and MPI.COMM_WORLD.Get_rank() == 0:
             # Save actor critic
             torch.save([self.o_norm.mean, self.o_norm.std, self.g_norm.mean, self.g_norm.std, self.actor_network.state_dict(), self.critic_network.state_dict()], \
                         self.model_path + '/acmodel{}.pt'.format(epoch))
