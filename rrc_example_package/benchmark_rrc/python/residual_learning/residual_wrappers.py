@@ -143,11 +143,11 @@ class ResidualWrapper(gym.Wrapper):
 
 
 class RandomizedEnvWrapper(gym.Wrapper):
-    def __init__(self, env, camera_fps=10.0, visualize=False, flatten_obs=False, time_step_s=0.001, random_scale=1.0):
+    def __init__(self, env, camera_fps=10.0, visualize=False, flatten_obs=False, time_step_s=0.001):
         super().__init__(env)
-        print('Domain randomisation scale: {}'.format(random_scale))
+        
         self.first_run = True
-        self.randomizer = TriFingerRandomizer(timestep_low=0.9*time_step_s, timestep_high=1.2*time_step_s, random_scale=random_scale)
+        self.randomizer = TriFingerRandomizer(timestep_low=0.9*time_step_s, timestep_high=1.2*time_step_s) #TODO: implement timestep better
         self.steps_per_camera_frame = int((1.0 / camera_fps) / time_step_s)
         self.visualize = visualize
         self.marker = None
@@ -167,7 +167,7 @@ class RandomizedEnvWrapper(gym.Wrapper):
             del self.marker
             self.marker = None
         
-        cube_width_scale = self.randomizer.cube_width_params.sample()
+        cube_width_scale = self.randomizer.sample_cube_width()
         self.env.cube_scale = cube_width_scale
         
         obs = self.env.reset(difficulty=difficulty, init_state=init_state, noisy=noisy, noise_level=noise_level)
@@ -223,22 +223,7 @@ class RandomizedEnvWrapper(gym.Wrapper):
 
     def randomize_action(self, action):
         noise = self.randomizer.sample_action_noise()
-        # if action['position'] is not None:
-        #     action['position'] = np.clip(
-        #         action['position'] + noise['action_position'],
-        #         self.action_space['position'].low,
-        #         self.action_space['position'].high
-        #     )
-
-        # if action['torque'] is not None:
-        #     action['torque'] = np.clip(
-        #         action['torque'] + noise['action_torque'],
-        #         self.action_space['torque'].low,
-        #         self.action_space['torque'].high
-        #     )
         if self.env.action_type == ActionType.TORQUE:
-            # print('Action: {}'.format(action))
-            # print('action noise: {}'.format(noise['action_torque']))
             action = np.clip(
                 action + noise['action_torque'],
                 self.action_space.low,
@@ -263,10 +248,8 @@ class RandomizedEnvWrapper(gym.Wrapper):
         ob_space = self.env.observation_space['robot_observation']['position']
         obs['robot_observation']['position'] = np.clip(obs['robot_observation']['position'] + noise['robot_position'],
                                         ob_space.low, ob_space.high)
-        # TODO: Include tip positions?
         obs['robot_observation']['tip_position'] = np.array(self.unwrapped.platform.forward_kinematics(obs['robot_observation']['position']))
         # add noise to robot_velocity
-        # print('rob vel: {}'.format(obs['robot_observation']['velocity']))
         ob_space = self.env.observation_space['robot_observation']['velocity']
         obs['robot_observation']['velocity'] = np.clip(obs['robot_observation']['velocity'] + noise['robot_velocity'],
                                         ob_space.low, ob_space.high)
@@ -294,8 +277,6 @@ class RandomizedEnvWrapper(gym.Wrapper):
         noise = self.randomizer.sample_cube_noise()
         q_obj = R.from_quat(obs['object_observation']['orientation'])
         q_noise = R.from_euler('ZYX', noise['cube_ori'], degrees=False)
-        # print('Cube pos: {}'.format(obs['object_observation']['position']))
-        # print('pos noise: {}'.format(noise['cube_pos']))
         return {
             'position': obs['object_observation']['position'] + noise['cube_pos'],
             'orientation': (q_obj * q_noise).as_quat()
@@ -312,7 +293,6 @@ class RandomizedEnvWrapper(gym.Wrapper):
     def set_robot_params(self, **kwargs):
         # set params by passing kw dictionary
         # all values of dict should be list which length is 3 or 9 for different params or float/int for the same param
-
         self.check_robot_param_dict(kwargs)
         for i, link_id in enumerate(self.link_indices):
             joint_kwargs = self.get_robot_param_dict(kwargs, i)

@@ -34,28 +34,28 @@ def main():
         
     if args.action_type == 'torque':
         action_type = ActionType.TORQUE
-    elif args.action_type == 'position':
-        action_type = ActionType.POSITION
-        if MPI.COMM_WORLD.Get_rank() == 0:
-            print('WARNING: position not setup for custom env')
     else:
-        raise NotImplementedError()
+        raise NotImplementedError("Only torque actions are currently supported")
         
-    if args.simtoreal == 1:
-        if MPI.COMM_WORLD.Get_rank() == 0: print('Using SimtoRealEnv')
-        env = cube_trajectory_env.SimtoRealEnv(visualization=False, max_steps=args.ep_len, \
-                                               xy_only=(args.xy_only==1), steps_per_goal=args.steps_per_goal, step_size=args.step_size,\
-                                                   env_type='sim', obs_type=args.obs_type, env_wrapped=(args.domain_randomization==1),\
-                                                       action_type=action_type, increase_fps=(args.increase_fps==1), disable_arm3=args.disable_arm3,
-                                                       distance_threshold=0.02)
-        if args.domain_randomization == 1:
-            if MPI.COMM_WORLD.Get_rank() == 0: print('....with Domain Randomization')
-            env = RandomizedEnvWrapper(env, flatten_obs=True, random_scale=args.random_scale)
-    else:
-        if MPI.COMM_WORLD.Get_rank() == 0: print('Using CustomSimCubeEnv')
-        env = cube_trajectory_env.CustomSimCubeEnv(visualization=False, max_steps=args.ep_len, \
-                                                   xy_only=(args.xy_only==1), steps_per_goal=args.steps_per_goal, step_size=args.step_size,\
-                                                       obs_type=args.obs_type, action_type=action_type, disable_arm3=args.disable_arm3)
+    
+    env = cube_trajectory_env.SimtoRealEnv(visualization=False,
+                                           max_steps=args.ep_len,
+                                           xy_only=(args.xy_only==1),
+                                           steps_per_goal=args.steps_per_goal,
+                                           step_size=args.step_size,
+                                           env_type='sim',
+                                           obs_type=args.obs_type,
+                                           env_wrapped=(args.domain_randomization==1),
+                                           action_type=action_type,
+                                           increase_fps=(args.increase_fps==1),
+                                           disable_arm3=args.disable_arm3,
+                                           distance_threshold=0.02
+                                           )
+    if args.domain_randomization == 1:
+        if MPI.COMM_WORLD.Get_rank() == 0:
+            print('....with Domain Randomization')
+        env = RandomizedEnvWrapper(env, flatten_obs=True)
+    
 
     # set random seeds for reproduce
     env.seed(args.seed + MPI.COMM_WORLD.Get_rank())
@@ -70,11 +70,9 @@ def main():
         print('Env params:')
         print(env_params)
         
-   
     # create the ddpg agent to interact with the environment 
     ddpg_trainer = ddpg_agent_rrc(args, env, env_params)
-    if not args.real_training:
-        ddpg_trainer.learn()
+    ddpg_trainer.learn()
 
 if __name__ == '__main__':
     # take the configuration for the HER

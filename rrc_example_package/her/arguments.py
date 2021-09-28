@@ -7,7 +7,8 @@ Here are the param for the training
 
 def get_args():
     parser = argparse.ArgumentParser()
-    # the environment setting
+    
+    # DDPG + HER og args
     parser.add_argument('--n-epochs', type=int, default=300, help='the number of epochs to train the agent')
     parser.add_argument('--n-cycles', type=int, default=50, help='the times to collect samples per epoch')
     parser.add_argument('--n-batches', type=int, default=40, help='the times to update the network')
@@ -34,23 +35,16 @@ def get_args():
     parser.add_argument('--cuda', action='store_true', help='if use gpu do the acceleration')
     parser.add_argument('--num-rollouts-per-mpi', type=int, default=2, help='the rollouts per mpi')
     
-    parser.add_argument('--load-pretrained', type=int, default=0, help='whether to load in a pretrained model')
-    parser.add_argument('--init-rollouts', type=int, default=0, help='initial rollouts to collect when loading in model')
-    parser.add_argument('--init-explore', type=float, default=0.5, help='proportion of initial rollouts to choose exploratory actions on w/ pretrained model')
-    parser.add_argument('--init-noisy', type=int, default=0, help='whether to use noisy resets for initial collections')
-    parser.add_argument('--pretrained-path', type=str, default='pretrained.pt', help='path to pretrained actor critic model')
+    # New RRC specific args
     parser.add_argument('--noisy-resets', type=int, default=0, help='whether to perturb default reset positions')
     parser.add_argument('--noise-level', type=int, default=1, help='magnitude of noise for resets')
-    parser.add_argument('--increment-noise', type=int, default=0, help='whether to slowly increase level of noise')
     parser.add_argument('--exp-dir', type=str, default='exp', help='experiment folder name')
     parser.add_argument('--z-reward', type=int, default=1, help='whether to include cube height based reward')
     parser.add_argument('--ep-len', type=int, default=90, help='Length of episode')
     parser.add_argument('--xy-only', type=int, default=1, help='Only use xy positions for sparse reward calculation')
     parser.add_argument('--steps-per-goal', type=int, default=30, help='steps per goal change')
     parser.add_argument('--z-scale', type=float, default=20, help='scale z/height rewards')
-    parser.add_argument('--simtoreal', type=int, default=1, help='use sim to real env')
     parser.add_argument('--domain-randomization', type=int, default=0, help='whether to use domain randomization')
-    parser.add_argument('--random-scale', type=float, default=1.0, help='domain randomisation magnitude')
     parser.add_argument('--step-size', type=int, default=50, help='whether to use domain randomization')
     parser.add_argument('--action-type', type=str, default='torque', help='type of action to use')
     parser.add_argument('--obs-type', type=str, default='default', help='type of obs to use')
@@ -58,8 +52,6 @@ def get_args():
     parser.add_argument('--increase-fps', type=int, default=0, help='whether to increase camera fps')
     parser.add_argument('--trajectory-aware', type=int, default=0, help='whether to make agent aware it is dealing with trajectories')
     parser.add_argument('--disable-arm3', type=int, default=0, help='whether to disable the robots 3rd arm')
-    parser.add_argument('--real-training', type=int, default=0, help='whether to follow the real robot training procedure')
-    parser.add_argument('--real-epoch', type=int, default=0, help='epoch of real training')
     
     args = parser.parse_args()
     return args

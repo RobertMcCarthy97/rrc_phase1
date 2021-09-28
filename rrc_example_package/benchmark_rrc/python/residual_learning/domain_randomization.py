@@ -13,7 +13,7 @@ DYNAMICS_PARAMS = {
     'rollingFriction': 0.1,
     'linearDamping': 0.5,
     'angularDamping': 0.5,
-    # 'contactStiffness': 0.1, # These are removed as cause arms to stop being collision objects!!!!!!!!!
+    # 'contactStiffness': 0.1, # These are removed as they cause arms to no longer be collision objects!!!!!!!!!
     # 'contactDamping': 0.05   # TODO: fix!!!
 }
 
@@ -62,38 +62,15 @@ class TriFingerRandomizer(object):
                  tip_force_scale=0.015,
                  tip_force_offset=0.095,
                  cube_rot_var=0.1,
-                 cube_pos_var=0.001,
+                 cube_pos_var=0.002,
                  action_position=0.001,
                  action_torque=0.001,
                  timestep_low=0.003,
                  timestep_high=0.005,
-                 random_scale=1.0):
+                 cube_width_low = 0.95,
+                 cube_width_high = 1.025
+                 ):
         
-        # position_scale=0.01
-        # velocity_scale=0.01
-        # action_torque=0.05
-        # print('WARNING ACTION TORQUE NOISE CHANGED to {}\n'.format(action_torque))
-        cube_pos_var=0.002
-        print('WARNING CUBE POS NOISE CHANGED to {}\n'.format(cube_pos_var))
-        cube_width_low = 0.95
-        cube_width_high = 1.025
-        print('cube_width_low: {}, high: {}'.format(cube_width_low, cube_width_high))
-        
-        # Set magnitude of randomizations
-        dynamics_scale = dynamics_scale * random_scale
-        cube_mass_scale = cube_mass_scale * random_scale
-        position_scale = position_scale * random_scale
-        velocity_scale = velocity_scale * random_scale
-        torque_scale = torque_scale * random_scale
-        tip_force_scale = tip_force_scale * random_scale
-        # tip_force_offset = tip_force_offset * random_scale
-        cube_rot_var = cube_rot_var * random_scale
-        cube_pos_var = cube_pos_var * random_scale
-        action_position = action_position * random_scale
-        action_torque = action_torque * random_scale
-        # timestep_low = timestep_low * random_scale
-        timestep_high = 0.001 + ((timestep_high - 0.001) * random_scale) # TODO: implement properly - this assumes base timestep is 0.001
-                       
         dynamics_params = []
         for name, p in DYNAMICS_PARAMS.items():
             low = np.array(p) * (1.0 - dynamics_scale)
@@ -140,6 +117,9 @@ class TriFingerRandomizer(object):
 
     def sample_cube_noise(self):
         return self.cube_params.sample()
+    
+    def sample_cube_width(self):
+        return self.cube_width_params.sample()
 
     def sample_action_noise(self):
         return self.action_params.sample()

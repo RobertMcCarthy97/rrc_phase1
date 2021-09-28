@@ -42,20 +42,3 @@ class critic(nn.Module):
         q_value = self.q_out(x)
 
         return q_value
-
-
-# # define simple feed-forward dynamics model
-# class DynamicsModel(nn.Module):
-#     def __init__(self, obs_size, act_size, hiddens=2, hidden_size=512):
-#         super(DynamicsModel, self).__init__()
-#         assert hiddens > 0, "Must have at least 1 hidden layer"
-#         self.hidden_layers = nn.ModuleList([nn.Linear(obs_size + act_size, hidden_size)])
-#         self.hidden_layers.extend([nn.Linear(hidden_size, hidden_size) for i in range(hiddens-1)])
-#         self.fc_final = nn.Linear(hidden_size, obs_size)
-
-#     def forward(self, obs, a):
-#         x = torch.cat([obs, a], dim=-1).float()
-#         for fc in self.hidden_layers:
-#             x = F.relu(fc(x))
-#         delta = self.fc_final(x)
-#         return delta

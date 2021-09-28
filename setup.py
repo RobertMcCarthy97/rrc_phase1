@@ -36,11 +36,9 @@ setuptools.setup(
             "sim_trajectory_example_with_gym = rrc_example_package.scripts.sim_trajectory_example_with_gym:main",
             "dice_example_with_gym = rrc_example_package.scripts.dice_example_with_gym:main",
             # custom scripts:
-            "collect_real_exp = rrc_example_package.scripts.collect_real_exp:main",
             "evaluate_stage1 = rrc_example_package.scripts.evaluate_stage1:main",
             "train = rrc_example_package.her.train:main",
             "demo = rrc_example_package.her.demo:main",
-            "evaluate = evaluate_policy:main."
         ],
     },
 )
