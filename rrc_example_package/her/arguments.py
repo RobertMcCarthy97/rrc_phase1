@@ -36,7 +36,7 @@ def get_args():
     parser.add_argument('--num-rollouts-per-mpi', type=int, default=2, help='the rollouts per mpi')
     
     # New RRC specific args
-    parser.add_argument('--noisy-resets', type=int, default=0, help='whether to perturb default reset positions')
+    parser.add_argument('--noisy-resets', type=int, default=1, help='whether to perturb default reset positions')
     parser.add_argument('--noise-level', type=int, default=1, help='magnitude of noise for resets')
     parser.add_argument('--exp-dir', type=str, default='exp', help='experiment folder name')
     parser.add_argument('--z-reward', type=int, default=1, help='whether to include cube height based reward')

@@ -36,17 +36,14 @@ def main():
     args = get_args()
     
     args.domain_randomization=False
-    random_scale=1.0
     max_steps=300
     step_size=50
     steps_per_goal=30
     difficulty=3
     noisy_resets=True
-    noise_level=1
     obs_type='default'
     explore=False
-    disable_arm3=0
-    model_path = 'src/rrc_example_package/rrc_example_package/her/saved_models/report/25_wcollision/25wcollision_acmodel35.pt'
+    model_path = 'rrc_example_package/her/saved_models/final_pinch_policy.pt'
     
     # load the model param
     o_mean, o_std, g_mean, g_std, model, crit = torch.load(model_path, map_location=lambda storage, loc: storage)
@@ -55,13 +52,13 @@ def main():
     env = cube_trajectory_env.SimtoRealEnv(visualization=True, max_steps=max_steps, \
                                            xy_only=0, steps_per_goal=steps_per_goal, step_size=step_size,\
                                                env_type='sim', obs_type=obs_type, env_wrapped=(args.domain_randomization==1),
-                                               disable_arm3=disable_arm3)
+                                               )
     if args.domain_randomization == 1:
         print('Using domain randomization')
-        env = RandomizedEnvWrapper(env, flatten_obs=True, random_scale=random_scale)
+        env = RandomizedEnvWrapper(env, flatten_obs=True)
 
     # get the env param
-    observation = env.reset(difficulty=difficulty, init_state='normal', noisy=noisy_resets, noise_level=noise_level)
+    observation = env.reset(difficulty=difficulty, init_state='normal', noisy=noisy_resets)
     # get the environment params
     env_params = {'obs': observation['observation'].shape[0], 
                   'goal': observation['desired_goal'].shape[0], 

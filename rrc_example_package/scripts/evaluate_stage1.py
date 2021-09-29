@@ -40,31 +40,13 @@ def main():
     steps_per_goal=100
     env_type='real'
     
-    # # PUSH SUBMISSION
-    # ###########
-    # step_size=10
-    # difficulty=1
-    # obs_type='default'
-    # model_path = '/userhome/26wcollisions_acmodel49.pt'
-    # disable_arm3=0
-    # ###########
     
-    # # 'CUPPING' SUBMISSION
-    # #############
-    # step_size=50
-    # difficulty=3
-    # obs_type='full'
-    # model_path = '/userhome/3armzfullDR_acmodel64.pt'
-    # disable_arm3=0
-    # #############
-    
-    # 'PINCH' SUBMISSION
+    # 'PINCHING' SUBMISSION
     #############
     step_size=50
     difficulty=3
     obs_type='default'
-    model_path = '/userhome/25wcollision_acmodel35.pt'
-    disable_arm3=0
+    model_path = '/userhome/final_pinch_policy.pt'
     #############
     
         
@@ -72,7 +54,7 @@ def main():
     sim_env = cube_trajectory_env.SimtoRealEnv(visualization=False, max_steps=max_steps, \
                                                xy_only=False, steps_per_goal=steps_per_goal, step_size=step_size,\
                                                    env_type='sim', obs_type=obs_type, env_wrapped=False,\
-                                                       increase_fps=False, goal_trajectory=goal, disable_arm3=disable_arm3)
+                                                       increase_fps=False, goal_trajectory=goal)
     # get the env param
     observation = sim_env.reset(difficulty=difficulty, init_state='normal')
     # get the environment params
@@ -93,15 +75,12 @@ def main():
         actor_network.load_state_dict(model)
         actor_network.eval()
     
-    if disable_arm3:
-        print('WARNING: disabling 3rd robot arm!!')
-    
     print('Env type: {}'.format(env_type))
     # Make real environment
     env = cube_trajectory_env.SimtoRealEnv(visualization=False, max_steps=max_steps, \
                                                xy_only=False, steps_per_goal=steps_per_goal, step_size=step_size,\
                                                    env_type=env_type, obs_type=obs_type, env_wrapped=False,\
-                                                       increase_fps=False, goal_trajectory=goal, disable_arm3=disable_arm3)
+                                                       increase_fps=False, goal_trajectory=goal)
     print('Beginning evaluate_stage1...')
     t0 = time.time()
     done = False

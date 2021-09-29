@@ -1,18 +1,62 @@
 ## TODO
-- Where to download custom image (or user_image.def) and trained models
-- Script + commands to run trained model on real robot (just use pinch - best policy)
-- Script + commands to tain model in simulation
 - Clean up all this code and delete any unused
 - get rid of train.sh?
-- Push this repo and make previous one private
-- domain rand scales
 - args better explanations
-- pretrained fix up loading in stuff (copy phase 2)
- - in ddpg_agent - get rid of 'sample_init_state_type'' function and any related. Get rid of load buffer, etc...
+
+Winning Submission to 2021 Real Robot Challenge Phase 1
+=======================================================
+
+This is the code from the winning submission to the 2021 Real Robot Challenge Phase 1.
+
+This code is based on the [rrc_example_package(https://github.com/rr-learning/rrc_example_package/tree/master)]
+provided by the challenge organisers. For more details on how to use this code with Singularity and ROS 2, see
+the relevant [documentation](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/singularity.html)
+
+Our report from the challenge can be found HERE.
+
+# Singularity image
+
+Download our custom singularity image: [user_image.sif](https://drive.google.com/drive/folders/1AKf4O28h8sYF_6J3FUq9oXJBY88joDcl?usp=sharing)
+
+Otherwise, rebuild it yourself using 'user_image.def' and following
+[these instructions](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/singularity.html#add-custom-dependencies-to-the-container)
+
+Name the image 'user_image.sif'
+
+## Train from scratch in Simulation
+
+To recreate our results in simulation, train a control policy from scratch by running the following command:
+
+    singularity run /path/to/user_image.sif mpirun -np 8 python3 train.py --exp-dir='train1' --n-epochs=300 2>&1 | tee train1.log
+
+'-np' specifies the number of MPI processes to be run in parallel. Expect worse results if less than 8 are used.
+
+Details of all arguments that can be used are found in 'rrc_example_package/her/arguments.py'.
+Expect each epoch of training to take up to 10 mins.
+
+## Test trained model
+
+Download our winning 'pinching' model: [final_pinch_policy.pt](https://drive.google.com/drive/folders/1AKf4O28h8sYF_6J3FUq9oXJBY88joDcl?usp=sharing)
+
+# Simulation
+
+Save the downloaded model as 'rrc_example_package/her/saved_models/final_pinch_policy.pt'
+and execute the following command:
+
+    singularity run /path/to/user_image.sif python3 demo.py
+
+# Real robot
+
+Upload the model to the robot cluster following [these instructions](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/submission_system/submission_system.html#upload-the-file)
+The path to the model on the cluster should thus be '/userhome/final_pinch_policy.pt'
+
+[Login](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/submission_system/submission_system.html#submitting-a-job) via ssh and call 'submit'
+
+This should run the 'rrc_example_package/scripts/evaualte_stage1.py' script on the real robot.
 
 
-Example Package for the Real Robot Challenge 2021
-=================================================
+README from the original Example Package:
+=========================================
 
 This is a basic example for a package that can be submitted to the robots of
 the [Real Robot Challenge 2021](https://real-robot-challenge.com).
@@ -37,27 +81,12 @@ There are two example scripts using the simulation:
   move the robot between two fixed positions.  This is implemented in
   `rrc_example_package/scripts/sim_move_up_and_down.py`.
 
-- `sim_trajectory_example_with_gym`:  Wraps the robot class in a Gym environment
-  and uses that to run a dummy policy which simply points with one finger on the
-  goal positions of the trajectory.  This is implemented in 
-  `rrc_example_package/scripts/sim_trajectory_example_with_gym.py`.
-
 To execute the examples, [build the
 package](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/singularity.html#singularity-build-ws)
 and execute
 
     ros2 run rrc_example_package <example_name>
 
-
-For evaluation of the pre-stage of the challenge, the critical file is the
-`evaluate_policy.py` at the root directory of the package.  This is what is
-going to be executed by `rrc_evaluate_prestage.py` (found in `scripts/`).
-
-For more information, see the [challenge
-documentation](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/)
-
-`evaluate_policy.py` is only used for the simulation phase and not relevant
-anymore for the later phases that use the real robot.
 
 
 Challenge Real Robot Phases (Stages 1 and 2)
