@@ -23,7 +23,7 @@ class her_sampler:
         t_samples = np.random.randint(T, size=batch_size)
         transitions = {key: episode_batch[key][episode_idxs, t_samples].copy() for key in episode_batch.keys()}
         
-        # Only sample 'achieved goals' for HER from span of current goal
+        # Only sample 'achieved goals' for HER from time-span of current goal
         T = self.steps_per_goal * np.ceil((t_samples + 1) / self.steps_per_goal)
         
         # her idx
@@ -31,11 +31,12 @@ class her_sampler:
         future_offset = np.random.uniform(size=batch_size) * (T - t_samples)
         future_offset = future_offset.astype(int)
         future_t = (t_samples + 1 + future_offset)[her_indexes]
-        # replace go with achieved goal
+        # replace goal with achieved goal
         future_ag = episode_batch['ag'][episode_idxs[her_indexes], future_t]
         temp_g = transitions['g'].copy()
         transitions['g'][her_indexes] = future_ag
         if self.xy_only:
+            # only replace x and y components of goal
             transitions['g'][:,-1] = temp_g[:,-1]
         # to get the params to re-compute reward
         transitions['r'] = np.expand_dims(self.reward_func(transitions['ag_next'], transitions['g'], None), 1)
@@ -44,6 +45,7 @@ class her_sampler:
         temp_g_next = transitions['g_next'].copy()
         transitions['g_next'] = transitions['g'].copy()
         if self.trajectory_aware:
+            # maintain goal changes in transitions where such a change takes place (not advised)
             no_change = np.where(t_samples == (T - 1))
             transitions['g_next'][no_change] = temp_g_next[no_change]
 

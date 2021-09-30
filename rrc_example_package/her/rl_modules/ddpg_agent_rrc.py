@@ -65,7 +65,6 @@ class ddpg_agent_rrc:
 
         """
         if MPI.COMM_WORLD.Get_rank() == 0:
-            print('WARNING: any reset noise is not applied to robot arms')
             print('\n[{}] Beginning RRC HER training, difficulty = {}\n'.format(datetime.now(), self.args.difficulty))
         # start to collect samples
         for epoch in range(self.args.n_epochs):

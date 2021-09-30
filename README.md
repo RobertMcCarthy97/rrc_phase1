@@ -1,62 +1,60 @@
-## TODO
-- Clean up all this code and delete any unused
-- get rid of train.sh?
-- args better explanations
-
-Winning Submission to 2021 Real Robot Challenge Phase 1
-=======================================================
+# Winning Submission to 2021 Real Robot Challenge Phase 1
 
 This is the code from the winning submission to the 2021 Real Robot Challenge Phase 1.
 
-This code is based on the [rrc_example_package(https://github.com/rr-learning/rrc_example_package/tree/master)]
+This code is built off the [rrc_example_package](https://github.com/rr-learning/rrc_example_package/tree/master)
 provided by the challenge organisers. For more details on how to use this code with Singularity and ROS 2, see
 the relevant [documentation](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/singularity.html)
 
-Our report from the challenge can be found HERE.
+Our final report from Phase 1 can be found HERE.
 
-# Singularity image
+## Singularity image
 
-Download our custom singularity image: [user_image.sif](https://drive.google.com/drive/folders/1AKf4O28h8sYF_6J3FUq9oXJBY88joDcl?usp=sharing)
-
+1. Download our custom singularity image: [user_image.sif](https://drive.google.com/drive/folders/1AKf4O28h8sYF_6J3FUq9oXJBY88joDcl?usp=sharing).
 Otherwise, rebuild it yourself using 'user_image.def' and following
 [these instructions](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/singularity.html#add-custom-dependencies-to-the-container)
 
-Name the image 'user_image.sif'
+2. Name the image `user_image.sif`
 
 ## Train from scratch in Simulation
 
-To recreate our results in simulation, train a control policy from scratch by running the following command:
+To reproduce our results in simulation, train a control policy from scratch by running the following command:
 
-    singularity run /path/to/user_image.sif mpirun -np 8 python3 train.py --exp-dir='train1' --n-epochs=300 2>&1 | tee train1.log
+    singularity run /path/to/user_image.sif mpirun -np 8 python3 train.py --exp-dir='reproduce' --n-epochs=300 2>&1 | tee reproduce.log
 
-'-np' specifies the number of MPI processes to be run in parallel. Expect worse results if less than 8 are used.
+`-np` specifies the number of MPI processes that will be run in parallel. Expect inferior performance if less than 8 are used.
 
-Details of all arguments that can be used are found in 'rrc_example_package/her/arguments.py'.
+Details of all arguments that can be used are found in `rrc_example_package/her/arguments.py`.
 Expect each epoch of training to take up to 10 mins.
 
-## Test trained model
+## Evaluate pretrained model
 
 Download our winning 'pinching' model: [final_pinch_policy.pt](https://drive.google.com/drive/folders/1AKf4O28h8sYF_6J3FUq9oXJBY88joDcl?usp=sharing)
 
-# Simulation
+### Simulation
 
-Save the downloaded model as 'rrc_example_package/her/saved_models/final_pinch_policy.pt'
+To view our model performing the task in simulation:
+
+Save the downloaded model as `rrc_example_package/her/saved_models/final_pinch_policy.pt`
 and execute the following command:
 
     singularity run /path/to/user_image.sif python3 demo.py
 
-# Real robot
+### Real robot
 
-Upload the model to the robot cluster following [these instructions](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/submission_system/submission_system.html#upload-the-file)
-The path to the model on the cluster should thus be '/userhome/final_pinch_policy.pt'
+To deploy the model on the real robot:
 
-[Login](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/submission_system/submission_system.html#submitting-a-job) via ssh and call 'submit'
+1. Upload the model to the robot cluster following [these instructions](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/submission_system/submission_system.html#upload-the-file).
+The path to the model on the cluster should thus be `/userhome/final_pinch_policy.pt`. 
 
-This should run the 'rrc_example_package/scripts/evaualte_stage1.py' script on the real robot.
+2. Ensure your [configuration file](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/submission_system/submission_system.html#configuration-file-roboch-json) is linked to this repository.
 
+3. [Login](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/submission_system/submission_system.html#submitting-a-job) via ssh and call 'submit'
 
-README from the original Example Package:
-=========================================
+This should run the `rrc_example_package/scripts/evaualte_stage1.py` script on the real robot.
+
+<br/><br/>
+# README from the original Example Package:
 
 This is a basic example for a package that can be submitted to the robots of
 the [Real Robot Challenge 2021](https://real-robot-challenge.com).

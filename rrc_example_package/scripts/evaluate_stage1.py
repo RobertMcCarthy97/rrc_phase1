@@ -29,19 +29,17 @@ def process_inputs(o, g, o_mean, o_std, g_mean, g_std):
     return inputs
 
 def main():
-    # goal=None
     # the goal is passed as JSON string
     goal_json = sys.argv[1]
     goal = json.loads(goal_json)
     print(goal)
-    
+    # some arguments
     load_actor=True
     max_steps=1000000
     steps_per_goal=100
     env_type='real'
     
-    
-    # 'PINCHING' SUBMISSION
+    # Arguments for 'PINCHING' policy
     #############
     step_size=50
     difficulty=3
@@ -49,33 +47,29 @@ def main():
     model_path = '/userhome/final_pinch_policy.pt'
     #############
     
-        
     # Make sim environment
     sim_env = cube_trajectory_env.SimtoRealEnv(visualization=False, max_steps=max_steps, \
                                                xy_only=False, steps_per_goal=steps_per_goal, step_size=step_size,\
                                                    env_type='sim', obs_type=obs_type, env_wrapped=False,\
                                                        increase_fps=False, goal_trajectory=goal)
-    # get the env param
+    # get the env params
     observation = sim_env.reset(difficulty=difficulty, init_state='normal')
-    # get the environment params
     env_params = {'obs': observation['observation'].shape[0], 
                   'goal': observation['desired_goal'].shape[0], 
                   'action': sim_env.action_space.shape[0], 
                   'action_max': sim_env.action_space.high[0],
                   }
-    # delete sim so not using memory
+    # delete sim env
     del sim_env
     
     if load_actor:
         # load the model param
-        # model_path = 'src/rrc_example_package/rrc_example_package/her/saved_models/16pushsimptrajload2/ac_model25.pt'
         print('Loading in model from: {}'.format(model_path))
         o_mean, o_std, g_mean, g_std, model, critic = torch.load(model_path, map_location=lambda storage, loc: storage)
         actor_network = actor(env_params)
         actor_network.load_state_dict(model)
         actor_network.eval()
     
-    print('Env type: {}'.format(env_type))
     # Make real environment
     env = cube_trajectory_env.SimtoRealEnv(visualization=False, max_steps=max_steps, \
                                                xy_only=False, steps_per_goal=steps_per_goal, step_size=step_size,\
@@ -84,16 +78,17 @@ def main():
     print('Beginning evaluate_stage1...')
     t0 = time.time()
     done = False
-    
+    # items for disrupting policy from stuck states
     xy_fails = 0
     rand_actions = 5
     fails_threshold = 50
-    
+    # reset env
     observation = env.reset(difficulty=difficulty, init_state='normal')
     while not done:
         obs = observation['observation']
         g = observation['desired_goal']
         if difficulty == 1:
+            # Move goal to the floor
             g[2] = 0.0325
         if xy_fails < fails_threshold:
             inputs = process_inputs(obs, g, o_mean, o_std, g_mean, g_std)
@@ -107,7 +102,7 @@ def main():
                 xy_fails = 0
         # put actions into the environment
         observation, reward, done, info = env.step(action)
-        
+        # Increment counters
         if info['xy_fail']:
             xy_fails += 1
         else:
@@ -116,7 +111,6 @@ def main():
         print('t_step={}, g={}, r={}, rrc={:.1f}, xy_fail={}'.format(info['time_index'], g, reward, info['rrc_reward'], info['xy_fail']))
     tf = time.time()
     print('Time taken: {:.2f} seconds'.format(tf-t0))
-    
     print('\nRRC reward: {}'.format(info['rrc_reward']))
 
 if __name__ == "__main__":

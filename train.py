@@ -18,7 +18,6 @@ train the agent, the MPI part code is copy from openai baselines(https://github.
 """
 def get_env_params(env):
     obs = env.reset()
-    # close the environment
     params = {'obs': obs['observation'].shape[0],
             'goal': obs['desired_goal'].shape[0],
             'action': env.action_space.shape[0],
@@ -37,7 +36,7 @@ def main():
     else:
         raise NotImplementedError("Only torque actions are currently supported")
         
-    
+    # initialise environment
     env = cube_trajectory_env.SimtoRealEnv(visualization=False,
                                            max_steps=args.ep_len,
                                            xy_only=(args.xy_only==1),
@@ -51,6 +50,7 @@ def main():
                                            disable_arm3=args.disable_arm3,
                                            distance_threshold=0.02
                                            )
+    # wrap in domain randomisation environment
     if args.domain_randomization == 1:
         if MPI.COMM_WORLD.Get_rank() == 0:
             print('....with Domain Randomization')

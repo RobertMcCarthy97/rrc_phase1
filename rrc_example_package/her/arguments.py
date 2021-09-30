@@ -36,16 +36,17 @@ def get_args():
     parser.add_argument('--num-rollouts-per-mpi', type=int, default=2, help='the rollouts per mpi')
     
     # New RRC specific args
-    parser.add_argument('--noisy-resets', type=int, default=1, help='whether to perturb default reset positions')
+    # For 'whether to...' args: 1 means True, 0 means False 
+    parser.add_argument('--noisy-resets', type=int, default=1, help='whether to perturb default env reset positions')
     parser.add_argument('--noise-level', type=int, default=1, help='magnitude of noise for resets')
     parser.add_argument('--exp-dir', type=str, default='exp', help='experiment folder name')
-    parser.add_argument('--z-reward', type=int, default=1, help='whether to include cube height based reward')
-    parser.add_argument('--ep-len', type=int, default=90, help='Length of episode')
+    parser.add_argument('--z-reward', type=int, default=1, help='whether to include the cube height-based reward')
+    parser.add_argument('--z-scale', type=float, default=20, help='scale the z rewards')
     parser.add_argument('--xy-only', type=int, default=1, help='Only use xy positions for sparse reward calculation')
-    parser.add_argument('--steps-per-goal', type=int, default=30, help='steps per goal change')
-    parser.add_argument('--z-scale', type=float, default=20, help='scale z/height rewards')
+    parser.add_argument('--ep-len', type=int, default=90, help='Length of each episode')
+    parser.add_argument('--steps-per-goal', type=int, default=30, help='steps per change in active goal')
+    parser.add_argument('--step-size', type=int, default=50, help='determines the action frequency of robot')
     parser.add_argument('--domain-randomization', type=int, default=0, help='whether to use domain randomization')
-    parser.add_argument('--step-size', type=int, default=50, help='whether to use domain randomization')
     parser.add_argument('--action-type', type=str, default='torque', help='type of action to use')
     parser.add_argument('--obs-type', type=str, default='default', help='type of obs to use')
     parser.add_argument('--difficulty', type=int, default=3, help='goal difficulty level')

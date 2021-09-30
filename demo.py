@@ -35,6 +35,7 @@ def select_actions(pi, args, env_params):
 def main():    
     args = get_args()
     
+    # Manually implemented arguments
     args.domain_randomization=False
     max_steps=300
     step_size=50
@@ -57,9 +58,8 @@ def main():
         print('Using domain randomization')
         env = RandomizedEnvWrapper(env, flatten_obs=True)
 
-    # get the env param
+    # get the env params
     observation = env.reset(difficulty=difficulty, init_state='normal', noisy=noisy_resets)
-    # get the environment params
     env_params = {'obs': observation['observation'].shape[0], 
                   'goal': observation['desired_goal'].shape[0], 
                   'action': env.action_space.shape[0], 
@@ -72,6 +72,7 @@ def main():
     actor_network = actor(env_params)
     actor_network.load_state_dict(model)
     actor_network.eval()
+    # create critic network
     critic_network = critic(env_params)
     critic_network.load_state_dict(crit)
     critic_network.eval()
