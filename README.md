@@ -1,22 +1,27 @@
-# Winning Submission to 2021 Real Robot Challenge Phase 1
+# Winning Submission to the 2021 Real Robot Challenge Phase 1
+
+<p align="center">
+  <img width="600" src="https://github.com/RobertMcCarthy97/rrc_phase1/blob/master/resource/content_trifingerpro_with_cube.jpg">
+</p>
 
 This is the code from the winning submission to the 2021 Real Robot Challenge Phase 1.
 
-This code is built off the [rrc_example_package](https://github.com/rr-learning/rrc_example_package/tree/master)
+See our final REPORT from Phase 1 and [videos](https://www.youtube.com/playlist?list=PLLJoWXUn8XplFszi16-VZMTDBhMQFuc5o)
+of our policies in action.
+
+The code is built off the [rrc_example_package](https://github.com/rr-learning/rrc_example_package/tree/master)
 provided by the challenge organisers. For more details on how to use this code with Singularity and ROS 2, see
 the relevant [documentation](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/singularity.html)
-
-Our final report from Phase 1 can be found HERE.
 
 ## Singularity image
 
 1. Download our custom singularity image: [user_image.sif](https://drive.google.com/drive/folders/1AKf4O28h8sYF_6J3FUq9oXJBY88joDcl?usp=sharing).
 Otherwise, rebuild it yourself using 'user_image.def' and following
-[these instructions](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/singularity.html#add-custom-dependencies-to-the-container)
+[these instructions](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/singularity.html#add-custom-dependencies-to-the-container).
 
 2. Name the image `user_image.sif`
 
-## Train from scratch in Simulation
+## Train in Simulation
 
 To reproduce our results in simulation, train a control policy from scratch by running the following command:
 
@@ -24,18 +29,18 @@ To reproduce our results in simulation, train a control policy from scratch by r
 
 `-np` specifies the number of MPI processes that will be run in parallel. Expect inferior performance if less than 8 are used.
 
-Details of all arguments that can be used are found in `rrc_example_package/her/arguments.py`.
+Details of all relevant arguments are found in `rrc_example_package/her/arguments.py`.
 Expect each epoch of training to take up to 10 mins.
 
 ## Evaluate pretrained model
 
-Download our winning 'pinching' model: [final_pinch_policy.pt](https://drive.google.com/drive/folders/1AKf4O28h8sYF_6J3FUq9oXJBY88joDcl?usp=sharing)
+First, download our winning 'pinching' model: [final_pinch_policy.pt](https://drive.google.com/drive/folders/1AKf4O28h8sYF_6J3FUq9oXJBY88joDcl?usp=sharing)
 
 ### Simulation
 
 To view our model performing the task in simulation:
 
-Save the downloaded model as `rrc_example_package/her/saved_models/final_pinch_policy.pt`
+1. Save the downloaded model as `rrc_example_package/her/saved_models/final_pinch_policy.pt`
 and execute the following command:
 
     singularity run /path/to/user_image.sif python3 demo.py
@@ -47,9 +52,10 @@ To deploy the model on the real robot:
 1. Upload the model to the robot cluster following [these instructions](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/submission_system/submission_system.html#upload-the-file).
 The path to the model on the cluster should thus be `/userhome/final_pinch_policy.pt`. 
 
-2. Ensure your [configuration file](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/submission_system/submission_system.html#configuration-file-roboch-json) is linked to this repository.
+2. Ensure your [configuration file](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/submission_system/submission_system.html#configuration-file-roboch-json)
+links to this repository.
 
-3. [Login](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/submission_system/submission_system.html#submitting-a-job) via ssh and call 'submit'
+3. [Login](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/submission_system/submission_system.html#submitting-a-job) via ssh and call `submit`
 
 This should run the `rrc_example_package/scripts/evaualte_stage1.py` script on the real robot.
 
@@ -73,7 +79,7 @@ documentation](https://docs.ros.org/en/foxy/Tutorials/Creating-Your-First-ROS2-P
 Challenge Simulation Phase (Pre-Stage)
 --------------------------------------
 
-There are two example scripts using the simulation:
+An example scripts using the simulation:
 
 - `sim_move_up_and_down`:  Directly uses the `TriFingerPlatform` class to simply
   move the robot between two fixed positions.  This is implemented in
