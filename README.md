@@ -13,7 +13,7 @@ The code is built off the [rrc_example_package](https://github.com/rr-learning/r
 provided by the challenge organisers. For more details on how to use this code with Singularity and ROS 2, see
 the relevant [documentation](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/singularity.html)
 
-## Singularity Iimage
+## Singularity Image
 
 1. Download our custom singularity image: [user_image.sif](https://drive.google.com/drive/folders/1AKf4O28h8sYF_6J3FUq9oXJBY88joDcl?usp=sharing).
 Otherwise, rebuild it yourself using 'user_image.def' and following
