@@ -1,19 +1,19 @@
 # Winning Submission to the 2021 Real Robot Challenge Phase 1
 
 <p align="center">
-  <img width="600" src="https://github.com/RobertMcCarthy97/rrc_phase1/blob/master/resource/content_trifingerpro_with_cube.jpg">
+  <img width="500" src="https://github.com/RobertMcCarthy97/rrc_phase1/blob/master/resource/content_trifingerpro_with_cube.jpg">
 </p>
 
 This is the code from the winning submission to the 2021 Real Robot Challenge Phase 1.
 
-See our final REPORT from Phase 1 and [videos](https://www.youtube.com/playlist?list=PLLJoWXUn8XplFszi16-VZMTDBhMQFuc5o)
+See our final [report](https://arxiv.org/abs/2109.15233) from Phase 1 and [videos](https://www.youtube.com/playlist?list=PLLJoWXUn8XplFszi16-VZMTDBhMQFuc5o)
 of our policies in action.
 
 The code is built off the [rrc_example_package](https://github.com/rr-learning/rrc_example_package/tree/master)
 provided by the challenge organisers. For more details on how to use this code with Singularity and ROS 2, see
 the relevant [documentation](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/singularity.html)
 
-## Singularity image
+## Singularity Iimage
 
 1. Download our custom singularity image: [user_image.sif](https://drive.google.com/drive/folders/1AKf4O28h8sYF_6J3FUq9oXJBY88joDcl?usp=sharing).
 Otherwise, rebuild it yourself using 'user_image.def' and following
@@ -32,7 +32,7 @@ To reproduce our results in simulation, train a control policy from scratch by r
 Details of all relevant arguments are found in `rrc_example_package/her/arguments.py`.
 Expect each epoch of training to take up to 10 mins.
 
-## Evaluate pretrained model
+## Evaluate Pretrained Model
 
 First, download our winning 'pinching' model: [final_pinch_policy.pt](https://drive.google.com/drive/folders/1AKf4O28h8sYF_6J3FUq9oXJBY88joDcl?usp=sharing)
 
@@ -45,7 +45,7 @@ and execute the following command:
 
     singularity run /path/to/user_image.sif python3 demo.py
 
-### Real robot
+### Real Robot
 
 To deploy the model on the real robot:
 
