@@ -9,7 +9,7 @@ of our policies in action.
 
 The code is built off the [rrc_example_package](https://github.com/rr-learning/rrc_example_package/tree/master)
 provided by the challenge organisers. For more details on how to use this code with Singularity and ROS 2, see
-the relevant [documentation](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/singularity.html)
+the relevant [documentation](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/singularity.html).
 
 ## Singularity Image
 
@@ -41,7 +41,7 @@ To view our model performing the task in simulation:
 1. Save the downloaded model as `rrc_example_package/her/saved_models/final_pinch_policy.pt`
 and execute the following command:
 
-    singularity run /path/to/user_image.sif python3 demo.py
+    `singularity run /path/to/user_image.sif python3 demo.py`
 
 ### Real Robot
 
