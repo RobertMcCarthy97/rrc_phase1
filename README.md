@@ -1,10 +1,8 @@
 # Winning Submission to the 2021 Real Robot Challenge Phase 1
 
-<p align="center">
-  <img width="500" src="https://github.com/RobertMcCarthy97/rrc_phase1/blob/master/resource/content_trifingerpro_with_cube.jpg">
-</p>
+https://user-images.githubusercontent.com/73226618/137600065-c66e22dc-9c15-46f1-a7b2-a779a3b4efe1.mp4
 
-This is the code from the winning submission to the 2021 Real Robot Challenge Phase 1.
+This is the code from the winning submission to the 2021 [Real Robot Challenge](https://real-robot-challenge.com/en) Phase 1.
 
 See our final [report](https://arxiv.org/abs/2109.15233) from Phase 1 and [videos](https://www.youtube.com/playlist?list=PLLJoWXUn8XplFszi16-VZMTDBhMQFuc5o)
 of our policies in action.
