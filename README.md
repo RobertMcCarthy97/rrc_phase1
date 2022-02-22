@@ -11,15 +11,21 @@ The code is built off the [rrc_example_package](https://github.com/rr-learning/r
 provided by the challenge organisers. For more details on how to use this code with Singularity and ROS 2, see
 the relevant [documentation](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/singularity.html).
 
-## Singularity Image
+## 1. Clone Repository
 
-1. Download our custom singularity image: [user_image.sif](https://drive.google.com/drive/folders/1AKf4O28h8sYF_6J3FUq9oXJBY88joDcl?usp=sharing).
+    git clone https://github.com/RobertMcCarthy97/rrc_phase1.git 
+
+## 2. Setup Singularity Image
+
+1. Install the [pre-built Debain package](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/singularity.html#install-singularity).
+
+2. Download our custom singularity image: [user_image.sif](https://drive.google.com/drive/folders/1AKf4O28h8sYF_6J3FUq9oXJBY88joDcl?usp=sharing).
 Otherwise, rebuild it yourself using 'user_image.def' and following
 [these instructions](https://people.tuebingen.mpg.de/felixwidmaier/rrc2021/singularity.html#add-custom-dependencies-to-the-container).
 
-2. Name the image `user_image.sif`
+3. Name the image `user_image.sif`.
 
-## Train in Simulation
+## 3. Train in Simulation
 
 To reproduce our results in simulation, train a control policy from scratch by running the following command:
 
@@ -30,7 +36,7 @@ To reproduce our results in simulation, train a control policy from scratch by r
 Details of all relevant arguments are found in `rrc_example_package/her/arguments.py`.
 Expect each epoch of training to take up to 10 mins.
 
-## Evaluate Pretrained Model
+## 4. Evaluate Pretrained Model
 
 First, download our winning 'pinching' model: [final_pinch_policy.pt](https://drive.google.com/drive/folders/1AKf4O28h8sYF_6J3FUq9oXJBY88joDcl?usp=sharing)
 
@@ -58,7 +64,7 @@ links to this repository.
 This should run the `rrc_example_package/scripts/evaualte_stage1.py` script on the real robot.
 
 <br/><br/>
-# README from the original Example Package:
+# Additional details from the original Example Package:
 
 This is a basic example for a package that can be submitted to the robots of
 the [Real Robot Challenge 2021](https://real-robot-challenge.com).
